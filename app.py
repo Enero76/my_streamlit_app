@@ -95,7 +95,7 @@ with middle_col:
     fig.update_layout(map_style="carto-positron",
                     map_zoom=7, map_center = {"lat": 46.79911910358427, "lon": 8.116236707428286},
                     margin={"r":0,"t":40,"l":0,"b":0}, title={
-                            'text': "Renewable Energy Production in Switzerland",
+                            'text': "Renewable Energy Production (MWh)",
                             'x': 0.5,
                             'xanchor': 'center'
                                 }
@@ -140,13 +140,12 @@ with middle_col:
         zoom=7,
         map_style="carto-positron",
         center={"lat": 46.8, "lon": 8.2},
-        title="Renewable Power plants in Switzerland",
         height=700,
         width=1200
     )
 
     fig.update_layout(margin={"r":0,"t":40,"l":0,"b":0}, title={
-            'text': "Renewable Power Plants in Switzerland",
+            'text': "Renewable Power Plants Capacity (MW)",
             'x': 0.5,
             'xanchor': 'center'
         })
@@ -186,7 +185,7 @@ with middle_col:
         map_center={"lat": 46.79911910358427, "lon": 8.116236707428286},
         margin={"r":0,"t":40,"l":0,"b":0},
         title={
-            'text': "Renewable Energy Production in Switzerland",
+            'text': "Renewable Power Plants and Cantons",
             'x': 0.5,
             'xanchor': 'center'
         },
