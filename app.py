@@ -9,6 +9,7 @@ import json
 from copy import deepcopy
 import os
 
+geojson_path = 'data/georef-switzerland-kanton.geojson'
 
 @st.cache_data
 def load_data(path):
@@ -30,16 +31,16 @@ df_plants_raw = load_data(csv_path)
 df_plants = deepcopy(df_plants_raw)
 
 # Create the page title
-#st.set_page_config(layout="wide")
-left_col, middle_col, right_col = st.columns([1,8,1])
+left_col, middle_col, right_col = st.columns([1,10,1])
 with middle_col:
+    st.set_page_config(layout="wide")
     st.title("Renewable Energy in Switzerland")
 
 
 ###############################
 # Energy Production per Canton
 ###############################
-swiss_areas = load_geojson('data/georef-switzerland-kanton.geojson')
+swiss_areas = load_geojson(geojson_path)
 
 df_plants.loc[df_plants['energy_source_level_3'].isnull(),'energy_source_level_3'] = str("Unknown")
 # Create a dictionary to map canton names in the dataset and the geojson:
