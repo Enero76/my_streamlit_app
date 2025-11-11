@@ -141,6 +141,7 @@ fig = px.scatter_map(
     center={"lat": 46.8, "lon": 8.2},
     title="Renewable Power plants in Switzerland",
     height=700,
+    width=1200
 )
 
 fig.update_layout(margin={"r":0,"t":40,"l":0,"b":0}, title={
@@ -217,6 +218,7 @@ scatter = px.scatter_map(
     map_style="carto-positron",
     center={"lat": 46.8, "lon": 8.2},
     height=700,
+    width=1200
 )
 
 # Añadimos las trazas de scatter al fig principal
@@ -235,7 +237,9 @@ fig.update_layout(
     coloraxis_colorbar=dict(
         title="Production (MWh)",
         x=1.02                    # mueve la barra de colores un poco a la derecha
-    )
+    ),
+    height=700,
+    width=1200
 )
 
 st.plotly_chart(fig, use_container_width=False)
