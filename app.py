@@ -16,7 +16,7 @@ def load_data(path):
 
 st.write("Hello world!")
 
-mpg_df_raw = load_data(path = "mpg.csv")
+mpg_df_raw = load_data(path = "data/mpg.csv")
 
 mpg_df = deepcopy(mpg_df_raw)
 
