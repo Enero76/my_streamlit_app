@@ -42,7 +42,7 @@ new_plants = df_plants['electrical_capacity']
 ###############################
 st.header("Energy Production per Canton")
 
-with open('../data/georef-switzerland-kanton.geojson', 'r') as file:
+with open('data/georef-switzerland-kanton.geojson', 'r') as file:
     swiss_areas = json.load(file)
 df_plants.loc[df_plants['energy_source_level_3'].isnull(),'energy_source_level_3'] = str("Unknown")
 # Create a dictionary to map canton names in the dataset and the geojson:
