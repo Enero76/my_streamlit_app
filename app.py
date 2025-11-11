@@ -33,7 +33,7 @@ df_plants = deepcopy(df_plants_raw)
 # Create the page title
 left_col, middle_col, right_col = st.columns([1,10,1])
 with middle_col:
-    st.set_page_config(layout="wide",page_icon="🌍",)
+    st.set_page_config(layout="wide",page_icon="renewable-icon.png")
     st.title("Renewable Energy in Switzerland")
 
 
