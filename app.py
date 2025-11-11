@@ -10,6 +10,7 @@ from copy import deepcopy
 import os
 
 geojson_path = 'data/georef-switzerland-kanton.geojson'
+csv_filename = "renewable_power_plants_CH.csv"
 
 @st.cache_data
 def load_data(path):
@@ -25,10 +26,28 @@ def load_geojson(path):
 # Ruta base = carpeta donde está este archivo .py
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Read the csv file
-csv_path = os.path.join(BASE_DIR, "data", "renewable_power_plants_CH.csv")
+# Read the csv and geojson files
+csv_path = os.path.join(BASE_DIR, "data", csv_filename)
 df_plants_raw = load_data(csv_path)
 df_plants = deepcopy(df_plants_raw)
+
+swiss_areas = load_geojson(geojson_path)
+
+df_plants.loc[df_plants['energy_source_level_3'].isnull(),'energy_source_level_3'] = str("Unknown")
+
+total_prod_GW = df_plants['production'].sum()/1000
+df_plants_prov = df_plants.copy()
+df_plants_prov = df_plants_prov.rename(columns={"energy_source_level_2": "Source"})
+df_plants_types = df_plants_prov.groupby('Source').sum()
+df_plants_types = df_plants_types[["electrical_capacity","production"]]
+#df_plants_types = df_plants_types.rename(columns={
+#    "energy_source_level_2": "Energy Source",
+#    "electrical_capacity": "Capacity (MW)",
+#    "production": "Production (MWh)"})
+
+df_plants_types.columns = ["Capacity (MW)","Production (MWh)"]
+
+
 
 # Create the page title
 left_col, middle_col, right_col = st.columns([1,10,1])
@@ -37,12 +56,12 @@ with middle_col:
     st.title("Renewable Energy in Switzerland")
 
 
+
+
 ###############################
 # Energy Production per Canton
 ###############################
-swiss_areas = load_geojson(geojson_path)
 
-df_plants.loc[df_plants['energy_source_level_3'].isnull(),'energy_source_level_3'] = str("Unknown")
 # Create a dictionary to map canton names in the dataset and the geojson:
 cantons_dict ={
     "GE" : "Genève",
@@ -77,7 +96,8 @@ df_plants['canton_str'] = df_plants['canton'].map(cantons_dict)
 df_sum = df_plants.groupby("canton_str", as_index=False)["production"].sum()
 
 with middle_col:
-    st.header("Energy Production per Canton")
+    st.header("Renewable Energy Production and Cantons")
+    middle_col.write(f"Total production in Switzerland is {round(total_prod_GW,3)} GWh")
 
     fig = go.Figure(go.Choroplethmap(geojson=swiss_areas, locations=df_sum.canton_str,
                                     featureidkey='properties.kan_name',
@@ -103,7 +123,9 @@ with middle_col:
                     ,width=1200
                     )
 
-    st.plotly_chart(fig, use_container_width=False)
+    st.plotly_chart(fig, width='content')
+
+    #
 
 ##################################
 # Renewable Plants in Switzerland
@@ -113,7 +135,15 @@ with middle_col:
     st.write("\n\n")
     st.write("\n\n")
     st.write("\n\n")
-    st.header("Renewable Plants in Switzerland")
+    st.header("Renewable Power Plants in Switzerland")
+
+    
+
+    
+    mini_left, mini_middle, mini_right = middle_col.columns([1,1,1])
+    mini_middle.dataframe(df_plants_types.style.format({"Production (MWh)": "{:,.0f}", "Capacity (MWh)": "{:,.f}"}))
+
+
 
     fig = px.scatter_map(
         df_plants,
@@ -150,7 +180,7 @@ with middle_col:
             'xanchor': 'center'
         })
 
-    st.plotly_chart(fig, use_container_width=False)
+    st.plotly_chart(fig, width='content')
 
 
 #####################
@@ -160,7 +190,7 @@ with middle_col:
     st.write("\n\n")
     st.write("\n\n")
     st.write("\n\n")
-    st.header("Renewable Plants and Cantons Production")
+    st.header("Renewable Power Plants and Cantons Production")
     df_sum = df_plants.groupby("canton_str", as_index=False)["production"].sum()
 
     fig = go.Figure(go.Choroplethmap(
@@ -243,4 +273,4 @@ with middle_col:
         width=1200
     )
 
-    st.plotly_chart(fig, use_container_width=False)
+    st.plotly_chart(fig, width='content')
